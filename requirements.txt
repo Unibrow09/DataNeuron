@@ -4,4 +4,4 @@ gunicorn==20.1.0
 numpy
 pandas
 scikit-learn==1.4.2
-Werkzeug==2.2.1  # Update to a compatible version
+Werkzeug==2.2.2  # Updated to meet Flask's minimum requirement

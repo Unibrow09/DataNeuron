@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Similarity Checker</title>
+</head>
+<body>
+    <h1>Text Similarity Checker</h1>
+    <form id="similarityForm">
+        <label for="text1">Text 1:</label>
+        <input type="text" id="text1" name="text1" required>
+        <br><br>
+        <label for="text2">Text 2:</label>
+        <input type="text" id="text2" name="text2" required>
+        <br><br>
+        <button type="button" onclick="getSimilarityScore()">Check Similarity</button>
+    </form>
+    <br>
+    <div id="result">Similarity score will appear here.</div>
+
+    <script>
+        function getSimilarityScore() {
+            var text1 = document.getElementById("text1").value;
+            var text2 = document.getElementById("text2").value;
+            var apiURL = window.location.hostname.includes('localhost') ?
+                         'http://127.0.0.1:5000/similarity' :
+                         'https://' + window.location.hostname + '/similarity';
+
+            fetch(apiURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({text1: text1, text2: text2})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = 'Similarity score: ' + data['similarity score'];
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById("result").innerHTML = 'Error calculating similarity.';
+            });
+        }
+    </script>
+    
+</body>
+</html>

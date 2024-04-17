@@ -18,16 +18,20 @@ def home():
 
 @app.route('/similarity', methods=['POST'])
 def similarity():
-    data = request.get_json()
-    if not data or 'text1' not in data or 'text2' not in data:
-        return jsonify({'error': 'Missing data, please provide text1 and text2'}), 400
+    try:
+        data = request.get_json()
+        if not data or 'text1' not in data or 'text2' not in data:
+            return jsonify({'error': 'Missing data, please provide text1 and text2'}), 400
 
-    text1 = data['text1']
-    text2 = data['text2']
-    texts_transformed = vectorizer.transform([text1, text2])
-    similarity_score = cosine_similarity(texts_transformed[0:1], texts_transformed[1:])[0][0]
+        text1 = data['text1']
+        text2 = data['text2']
+        texts_transformed = vectorizer.transform([text1, text2])
+        similarity_score = cosine_similarity(texts_transformed[0:1], texts_transformed[1:])[0][0]
 
-    return jsonify({"similarity score": similarity_score})
+        return jsonify({"similarity score": similarity_score})
+    except Exception as e:
+        app.logger.error(f"Error calculating similarity: {str(e)}")
+        return jsonify({'error': 'Error calculating similarity'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)  # Remember to turn off debug in a production environment
